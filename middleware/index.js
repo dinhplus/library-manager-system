@@ -41,7 +41,8 @@ async function authorize(ctx, next) {
             .from('product_access_details')
             .andWhere('del_flag', 0)
 
-        const tokens = credentials.map(creds => {}
+        const tokens = credentials.map(
+            (creds) => {}
             // ApiHelper.getToken(creds)
             //     .then(token => ({
             //         [creds.product]: {
@@ -61,7 +62,7 @@ async function authorize(ctx, next) {
         {
             key: `${decoded.email}:tokens`,
             ttl: '6 days',
-            json: true
+            json: true,
         },
         getTokens
     )

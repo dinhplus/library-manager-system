@@ -21,7 +21,7 @@ app.use(async (ctx, next) => {
 })
 app.use(
     bodyParser({
-        enableTypes: ['json', 'form', 'text']
+        enableTypes: ['json', 'form', 'text'],
     })
 )
 
@@ -31,7 +31,7 @@ app.use(
     compress({
         threshold: 2048,
         flush: zlib.Z_SYNC_FLUSH,
-        level: 9
+        level: 9,
     })
 )
 

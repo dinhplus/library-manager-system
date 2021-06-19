@@ -7,14 +7,7 @@ const Role = require('./role')
 module.exports = class User {
     static async fetchUserByEmail(email) {
         const user = await knex
-            .first(
-                'id',
-                'email',
-                'name',
-                'password_hash',
-                'role_id',
-                'external'
-            )
+            .first('id', 'email', 'name', 'password_hash', 'role_id', 'external')
             .from('user')
             .where('email', email)
 
@@ -24,9 +17,7 @@ module.exports = class User {
 
         const permissions = await Role.getPermissionsByRole(user.role_id)
 
-        user.permissions = permissions.map(p =>
-            _.pick(p, 'resource_code', 'permission_code')
-        )
+        user.permissions = permissions.map((p) => _.pick(p, 'resource_code', 'permission_code'))
 
         return user
     }
@@ -42,9 +33,8 @@ module.exports = class User {
             delete atts.password
         }
 
-        await knex('user')
-            .update(atts)
-            .where('id', id)
+        await knex('user').update(atts)
+.where('id', id)
 
         return 0
     }

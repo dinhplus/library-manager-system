@@ -13,14 +13,14 @@ const { authorize } = require('../../middleware')
 
 const router = new Router()
 
-router.post('/login', async ctx => {
+router.post('/login', async (ctx) => {
     debug('POST /login')
     const { body } = ctx.request
     const schema = Joi.object()
         .keys({
             email: Joi.string(),
             password: Joi.string(),
-            token: Joi.string()
+            token: Joi.string(),
         })
         .and('email', 'password')
         .xor('email', 'token')
@@ -33,7 +33,7 @@ router.post('/login', async ctx => {
         ctx.body = {
             success: false,
             message: '(╯°□°）╯︵ ┻━┻ missing or invalid params',
-            verbosity
+            verbosity,
         }
     } else {
         try {
@@ -45,9 +45,7 @@ router.post('/login', async ctx => {
                 const currentUser = await googleLogin.checkAccount(googleUser)
 
                 if (currentUser.del_flag === 1) {
-                    throw new Error(
-                        'Your account is not exist. Please contact Gateway team to setup.'
-                    )
+                    throw new Error('Your account is not exist. Please contact Gateway team to setup.')
                 }
 
                 user = await fetchUserByEmail(googleUser.email)
@@ -63,9 +61,7 @@ router.post('/login', async ctx => {
             const payload = {
                 id: user.id,
                 email: user.email,
-                expire: moment()
-                    .add('7', 'days')
-                    .unix()
+                expire: moment().add('7', 'days').unix(),
             }
 
             ctx.body = {
@@ -76,24 +72,24 @@ router.post('/login', async ctx => {
                     email: user.email,
                     avatar: user.avatar,
                     external: user.external,
-                    permissions: user.permissions
-                }
+                    permissions: user.permissions,
+                },
             }
         } catch (e) {
             ctx.body = {
                 success: false,
-                message: `login failed: ${e.message}`
+                message: `login failed: ${e.message}`,
             }
         }
     }
 })
-router.post('/:product/generate-token', authorize, async ctx => {
+router.post('/:product/generate-token', authorize, async (ctx) => {
     debug('POST /generate-token')
     const { body } = ctx.request
     const { product } = ctx.params
     const schema = Joi.object().keys({
         id: Joi.string().required(),
-        email: Joi.string().required()
+        email: Joi.string().required(),
     })
 
     const err = Joi.validate(body, schema).error
@@ -104,16 +100,15 @@ router.post('/:product/generate-token', authorize, async ctx => {
         ctx.body = {
             success: false,
             message: '(╯°□°）╯︵ ┻━┻ missing or invalid params',
-            verbosity
+            verbosity,
         }
     } else {
         try {
             const payload = {
                 id: body.id,
                 email: body.email,
-                expire: moment()
-                    .add('35', 'minutes')
-                    .unix()
+                expire: moment().add('35', 'minutes')
+.unix(),
             }
 
             const productSecret = config[`${product}_secret`]
@@ -125,26 +120,26 @@ router.post('/:product/generate-token', authorize, async ctx => {
             ctx.body = {
                 success: true,
                 data: {
-                    auth_token: jwt.encode(payload, productSecret)
-                }
+                    auth_token: jwt.encode(payload, productSecret),
+                },
             }
         } catch (e) {
             ctx.body = {
                 success: false,
-                message: `generate token failed: ${e.message}`
+                message: `generate token failed: ${e.message}`,
             }
         }
     }
 })
 
-router.post('/signup', async ctx => {
+router.post('/signup', async (ctx) => {
     debug('POST /signup')
     const { body } = ctx.request
     const schema = Joi.object().keys({
         email: Joi.string().required(),
         password: Joi.string().required(),
         name: Joi.string().required(),
-        role_id: Joi.string().required()
+        role_id: Joi.string().required(),
     })
 
     const err = Joi.validate(body, schema).error
@@ -155,14 +150,12 @@ router.post('/signup', async ctx => {
         ctx.body = {
             success: false,
             message: '(╯°□°）╯︵ ┻━┻ missing or invalid params',
-            verbosity
+            verbosity,
         }
     } else {
         try {
-            const u = await knex
-                .select('email')
-                .from('user')
-                .where('email', body.email)
+            const u = await knex.select('email').from('user')
+.where('email', body.email)
 
             if (u.length) {
                 throw new Error(`user ${body.email} already exits`)
@@ -172,27 +165,27 @@ router.post('/signup', async ctx => {
                 email: body.email,
                 password_hash: hashPassword(body.password),
                 name: body.name,
-                role_id: body.role_id
+                role_id: body.role_id,
             })
 
             ctx.body = {
-                success: true
+                success: true,
             }
         } catch (e) {
             ctx.body = {
                 success: false,
-                message: `cannot create user: ${e.message}`
+                message: `cannot create user: ${e.message}`,
             }
         }
     }
 })
 
-router.post('/change-password', authorize, async ctx => {
+router.post('/change-password', authorize, async (ctx) => {
     const { email } = ctx.User
     const { body } = ctx.request
     const schema = Joi.object().keys({
         password: Joi.string().required(),
-        new_password: Joi.string().required()
+        new_password: Joi.string().required(),
     })
 
     const { error } = Joi.validate(body, schema)
@@ -209,7 +202,7 @@ router.post('/change-password', authorize, async ctx => {
 
         await knex('user')
             .update({
-                password_hash: hashPassword(body.new_password)
+                password_hash: hashPassword(body.new_password),
             })
             .where('id', user.id)
 
@@ -218,6 +211,5 @@ router.post('/change-password', authorize, async ctx => {
         ctx.body = ''
     }
 })
-
 
 module.exports = router

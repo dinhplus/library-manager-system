@@ -5,15 +5,14 @@ const router = new Router()
 
 const listRouter = ['admin', 'client', 'document', 'common']
 
-listRouter.forEach( routerName => {
-
+listRouter.forEach((routerName) => {
     // bootstrap routes
     glob(`${__dirname}/${routerName}/*.js`, { ignore: '**/index.js' }, (err, matches) => {
         if (err) {
             throw err
         }
 
-        matches.forEach(file => {
+        matches.forEach((file) => {
             const controller = require(file) // eslint-disable-line
             console.log(typeof controller)
 

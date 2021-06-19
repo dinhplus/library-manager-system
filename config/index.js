@@ -13,12 +13,11 @@ const defaults = {
     redisHost: 'localhost',
     redisPort: '6379',
     redisDb: 0,
-    redisPassword: null
+    redisPassword: null,
 }
 
 let custom = {
-    production: process.env.NODE_ENV === 'production' ||
-        process.env.ENV === 'production',
+    production: process.env.NODE_ENV === 'production' || process.env.ENV === 'production',
     env: process.env.NODE_ENV,
     port: process.env.PORT,
     secret: process.env.SECRET,
@@ -37,21 +36,21 @@ let custom = {
         booking: process.env.BOOKING_URL,
         flight: process.env.FLIGHT_URL,
         car: process.env.CAR_URL,
-        transporter: process.env.TRANSPORTER_URL
+        transporter: process.env.TRANSPORTER_URL,
     },
     auth: {
         google: {
             clientId: process.env.GOOGLE_AUTH_CLIENT_ID,
-            secret: process.env.GOOGLE_AUTH_SECRET
-        }
-    }
+            secret: process.env.GOOGLE_AUTH_SECRET,
+        },
+    },
 }
 
 custom = _.pickBy(custom, _.identity)
 
 const config = {
     ...defaults,
-    ...custom
+    ...custom,
 }
 
 module.exports = config
