@@ -1,0 +1,46 @@
+{
+    "extends": ["prettier", "plugin:jest/recommended"],
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es6": true,
+        "jest": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 12
+    },
+    "plugins": ["import", "prettier"],
+    "rules": {
+        "indent": [
+            "error",
+            4
+        ],
+        "linebreak-style": [
+            "error",
+            "windows"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "eqeqeq": ["warn"],
+        "radix": ["warn"],
+        "newline-per-chained-call": ["warn"],
+        "newline-before-return": "error",
+        "no-restricted-syntax": ["warn"],
+        "no-param-reassign": ["error", { "props": false }],
+        "import/no-dynamic-require": ["warn"],
+        "prettier/prettier": [
+            "error",
+            {
+                "singleQuote": true,
+                "semi": false,
+                "tabWidth": 4
+            }
+        ]
+    }
+}
